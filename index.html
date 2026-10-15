@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualización de Clusters - IMSS Bienestar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link rel="stylesheet" href="data/estilos.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <img src="https://imssbienestar.gob.mx/assets/img/imb_b.svg" alt="IMSS Bienestar" id="logoLogin">
+                <h1 class="login-title">Visualización de Clusters</h1>
+                <p class="login-subtitle">Sistema de visualización de clusters HBC</p>
+            </div>
+            <div id="login-form">
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="loginNombre">Nombre completo</label>
+                    <input type="text" id="loginNombre" name="nombre" required placeholder="Ingrese su nombre completo">
+                </div>
+                <div class="form-group">
+                    <label for="loginCorreo">Correo electrónico</label>
+                    <input type="email" id="loginCorreo" name="correo" required placeholder="Ingrese su correo institucional">
+                </div>
+                <div id="loginMessage" class="login-message"></div>
+                <button type="button" class="login-btn" id="loginBtn">Ingresar al sistema</button>
+            </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <div class="logo-center">
+                <img src="https://imssbienestar.gob.mx/assets/img/imb_b.svg" alt="IMSS Bienestar" class="logo-imss">
+                <div class="header-title">Visualización de Clusters - IMSS Bienestar</div>
+            </div>
+            <div class="user-info">
+                <strong id="userName"></strong>
+                <span id="userEmail"></span>
+                <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+            </div>
+        </header>
+
+        <main class="main-container">
+            <div class="right-panel">
+                <div class="map-container">
+                    <!-- Botón de menú hamburguesa - sin emoji -->
+                    <div class="hamburger-menu-btn" id="hamburgerBtn">
+                        <span>☰</span>
+                    </div>
+
+                    <!-- Menú deslizable -->
+                    <div class="slide-menu" id="slideMenu">
+                        <!-- Panel de estadísticas -->
+                        <div class="stats-panel-menu">
+                            <div class="stats-title-menu">ESTADÍSTICAS</div>
+                            <div class="stats-grid-menu">
+                                <div class="stat-card-menu">
+                                    <div class="stat-number-menu" id="statAnclas">0</div>
+                                    <div class="stat-label-menu">Hospitales Ancla</div>
+                                </div>
+                                <div class="stat-card-menu hbc-stat">
+                                    <div class="stat-number-menu" id="statHBCs">0</div>
+                                    <div class="stat-label-menu">HBCs</div>
+                                </div>
+                                <div class="stat-card-menu entidad-stat">
+                                    <div class="stat-number-menu" id="statEntidades">0</div>
+                                    <div class="stat-label-menu">Entidades</div>
+                                </div>
+                                <div class="stat-card-menu cluster-stat">
+                                    <div class="stat-number-menu" id="statClusters">0</div>
+                                    <div class="stat-label-menu">Clusters</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controles del mapa -->
+                        <div class="map-controls-panel-menu">
+                            <div class="map-controls-title-menu">Controles del Mapa</div>
+                            <div class="map-controls-menu">
+                                <button type="button" class="control-btn-menu active" id="btnMostrarAnclas">
+                                    <i class=""></i> Mostrar Anclas
+                                </button>
+                                <button type="button" class="control-btn-menu hbc active" id="btnMostrarHBCs">
+                                    <i class=""></i> Mostrar HBCs
+                                </button>
+                                <button type="button" class="control-btn-menu active" id="btnMostrarRutas">
+                                    <i class=""></i> Mostrar Rutas
+                                </button>
+                                <button type="button" class="control-btn-menu" id="btnVerTodoMexico">
+                                    <i class=""></i> Ver Todo México
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mapa -->
+                    <div id="map"></div>
+
+                    <!-- Leyenda -->
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color ancla"></div>
+                            <span>Hospital Ancla</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color hbc"></div>
+                            <span>HBC</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color ruta"></div>
+                            <span>Rutas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2026 Gobierno de México - IMSS Bienestar</p>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="data/colors.js"></script>
+    <script src="data/anclas.js"></script>
+    <script src="data/hbcs_1.js"></script>
+    <script src="data/hbcs_2.js"></script>
+    <script src="data/rutas_01.js"></script>
+    <script src="data/rutas_02.js"></script>
+    <script src="data/rutas_03.js"></script>
+    <script src="data/rutas_04.js"></script>
+    <script src="data/rutas_05.js"></script>
+    <script src="data/rutas_06.js"></script>
+    <script src="data/rutas_07.js"></script>
+    <script src="data/rutas_08.js"></script>
+    <script src="data/rutas_09.js"></script>
+    <script src="data/rutas_10.js"></script>
+    <script src="data/rutas_11.js"></script>
+    <script src="data/rutas_12.js"></script>
+    <script>
+        // Variables globales
+        let currentUser = null;
+        let usuarioActual = null;
+        let map = null;
+        let anchorsLayer = null;
+        let hbcLayer = null;
+        let routesLayer = null;
+        let selectedLayer = null;
+        let showAnchors = true;
+        let showHBCs = true;
+        let showRoutes = true;
+
+        // URL del script de Google Apps Script
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx-PKG8_q3OhfsRuXqVJFUM5sr6JNATwgdQ3PkGAGztJpkjOP1wErBaLQH0lOD60aVT/exec';
+
+        // Inicialización
+        function init() {
+            // Agregar animaciones iniciales
+            anime({
+                targets: '#logoLogin',
+                scale: [1, 1.1, 1],
+                rotate: [0, 5, -5, 0],
+                duration: 2000,
+                loop: true,
+                easing: 'easeInOutSine'
+            });
+
+            // Verificar usuario guardado
+            const savedUser = localStorage.getItem('cluster_eval_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                usuarioActual = currentUser;
+                showMainContent();
+                updateUserInfo();
+            } else {
+                showLogin();
+            }
+        }
+
+        // Mostrar/ocultar secciones
+        function showLogin() {
+            document.querySelector('.login-container').style.display = 'flex';
+            document.querySelector('.main-content').style.display = 'none';
+            if (map) {
+                map.remove();
+                map = null;
+            }
+        }
+
+        function showMainContent() {
+            console.log('showMainContent: Iniciando...');
+
+            const loginContainer = document.querySelector('.login-container');
+            const mainContent = document.querySelector('.main-content');
+
+            if (!loginContainer || !mainContent) {
+                console.error('showMainContent: No se encontraron los elementos necesarios');alert('Error: No se pudieron encontrar los contenedores necesarios.');
+                return;
+            }
+
+            loginContainer.style.display = 'none';
+            mainContent.style.display = 'flex';
+            console.log('showMainContent: Contenedores actualizados');
+
+            try {
+                updateUserInfo();
+                console.log('showMainContent: Usuario actualizado');
+            } catch(e) {
+                console.error('Error al actualizar usuario:', e);
+            }
+
+            try {
+                initializeMap();
+                console.log('showMainContent: Mapa inicializado');
+            } catch(e) {
+                console.error('Error al inicializar mapa:', e);
+            }
+
+            console.log('showMainContent: Completado');
+        }
+
+        function updateUserInfo() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.nombre;
+                document.getElementById('userEmail').textContent = currentUser.correo;
+            }
+        }
+
+        // Mapa - Configuración sin atribución
+        function initializeMap() {
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) return;
+
+            if (map) map.remove();
+
+            map = L.map('map', {
+                attributionControl: true
+            }).setView([23.6345, -102.5528], 5);
+
+            L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors, tiles OSM.DE'
+            }).addTo(map);
+
+            anchorsLayer = L.layerGroup().addTo(map);
+            hbcLayer = L.layerGroup().addTo(map);
+            routesLayer = L.layerGroup().addTo(map);
+            selectedLayer = L.layerGroup().addTo(map);
+
+            displayAllData();
+            updateStats();
+            setTimeout(() => { map.invalidateSize(); }, 500);
+        }
+
+        function displayAllData() {
+            displayAnchors(anchorsData);
+            displayHBCs(hbcData);
+            displayRoutes(routeData);
+        }
+
+        function displayAnchors(anchors) {
+            anchorsLayer.clearLayers();
+            if (!showAnchors) return;
+
+            anchors.forEach(anchor => {
+                if (!anchor.latitud_ancla || !anchor.longitud_ancla) return;
+
+                const color = anchor.cluster_color || '#AE8640';
+                const marker = L.marker([anchor.latitud_ancla, anchor.longitud_ancla], {
+                    icon: L.divIcon({
+                        html: `<div style="
+                            background-color: ${color};
+                            border: 2px solid #611232;
+                            border-radius: 50%;
+                            width: 20px;
+                            height: 20px;
+                            color: white;
+                            font-size: 15px;
+                            font-weight: bold;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        ">👩🏽‍⚕️</div>`,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    })
+                });
+
+                marker.bindPopup(`<strong>Hospital Ancla</strong><br>
+                                 <strong>Nombre:</strong> ${anchor.nombre_hospital_ancla}<br>
+                                 <strong>CLUES:</strong> ${anchor.clues_ancla}<br>
+                                 <strong>Cluster:</strong> ${anchor.cluster_id || 'N/A'}`);
+
+                marker.addTo(anchorsLayer);
+            });
+        }
+
+        function displayHBCs(hbcs) {
+            hbcLayer.clearLayers();
+            if (!showHBCs) return;
+
+            hbcs.forEach(hbc => {
+                if (!hbc.lat || !hbc.lon) return;
+
+                const color = hbc.cluster_color || '#235B4E';
+                const marker = L.circleMarker([hbc.lat, hbc.lon], {
+                    radius: 6,
+                    color: '#235B4E',
+                    fillColor: color,
+                    fillOpacity: 0.8,
+                    weight: 2
+                });
+
+                marker.bindPopup(`<strong>HBC</strong><br>
+                                 <strong>Nombre:</strong> ${hbc.nombre}<br>
+                                 <strong>CLUES:</strong> ${hbc.clues}<br>
+                                 <strong>Cluster:</strong> ${hbc.cluster_id || 'N/A'}<br>
+                                 <strong>Ancla:</strong> ${hbc.ancla_asociado || 'N/A'}`);
+
+                marker.addTo(hbcLayer);
+            });
+        }
+
+        function displayRoutes(routes) {
+            routesLayer.clearLayers();
+            if (!showRoutes) return;
+
+            routes.forEach(route => {
+                if (!route.coordinates || route.coordinates.length < 2) return;
+
+                const color = route.cluster_color || '#7A1737';
+                const polyline = L.polyline(route.coordinates, {
+                    color: color,
+                    weight: 2,
+                    opacity: 0.6
+                });
+
+                polyline.bindPopup(`<strong>Ruta</strong><br>
+                                   <strong>HBC:</strong> ${route.nombre_hbc}<br>
+                                   <strong>Ancla:</strong> ${route.nombre_ancla}<br>
+                                   <strong>Distancia:</strong> ${route.distance_km} km<br>
+                                   <strong>Tiempo:</strong> ${route.travel_minutes} min`);
+
+                polyline.addTo(routesLayer);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('statAnclas').textContent = anchorsData.length;
+            document.getElementById('statHBCs').textContent = hbcData.length;
+            document.getElementById('statClusters').textContent = Object.keys(clusterColorMap).length;
+            const ents = new Set();
+            anchorsData.forEach(a => a.entidad && ents.add(a.entidad));
+            hbcData.forEach(h => h.entidad && ents.add(h.entidad));
+            document.getElementById('statEntidades').textContent = ents.size;
+        }
+
+        // Función para alternar el menú hamburguesa
+        function toggleMenu() {
+            const menu = document.getElementById('slideMenu');
+            const btn = document.getElementById('hamburgerBtn');
+            menu.classList.toggle('open');
+            btn.classList.toggle('active');
+
+            // Cambiar el ícono
+            const icon = btn.querySelector('span');
+            if (menu.classList.contains('open')) {
+                icon.textContent = '✕';
+            } else {
+                icon.textContent = '☰';
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            console.log('Login button clicked');
+
+            const nombre = document.getElementById('loginNombre').value.trim();
+            const correo = document.getElementById('loginCorreo').value.trim();
+
+            console.log('Nombre:', nombre, 'Correo:', correo);
+
+            if (!nombre || !correo) {
+                showMessage('Por favor, complete todos los campos', 'error');
+                return;
+            }
+
+            currentUser = { nombre, correo, loginTime: new Date().toISOString() };
+            usuarioActual = currentUser;
+            localStorage.setItem('cluster_eval_user', JSON.stringify(currentUser));
+
+            console.log('Usuario guardado:', currentUser);
+
+            showMessage('Iniciando sesión...', 'success');
+
+            setTimeout(() => {
+                showMainContent();
+
+                if (typeof anime !== 'undefined') {
+                    anime({
+                        targets: '.login-box',
+                        opacity: [1, 0],
+                        translateY: [0, -50],
+                        duration: 500,
+                        easing: 'easeInQuad'
+                    });
+                }
+            }, 300);
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                localStorage.removeItem('cluster_eval_user');
+                currentUser = null;
+
+                anime({
+                    targets: '.main-content',
+                    opacity: [1, 0],
+                    duration: 300,
+                    easing: 'easeInQuad',
+                    complete: () => showLogin()
+                });
+            }
+        });
+
+        // Evento del botón hamburguesa
+        document.getElementById('hamburgerBtn').addEventListener('click', toggleMenu);
+
+        // Cerrar menú al hacer clic fuera de él
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('slideMenu');
+            const btn = document.getElementById('hamburgerBtn');
+
+            if (menu.classList.contains('open') && 
+                !menu.contains(event.target) && 
+                !btn.contains(event.target)) {
+                toggleMenu();
+            }
+        });
+
+        document.getElementById('btnMostrarAnclas').addEventListener('click', function() {
+            showAnchors = !showAnchors;
+            this.classList.toggle('active', showAnchors);
+            displayAnchors(anchorsData);
+        });
+
+        document.getElementById('btnMostrarHBCs').addEventListener('click', function() {
+            showHBCs = !showHBCs;
+            this.classList.toggle('active', showHBCs);
+            displayHBCs(hbcData);
+        });
+
+        document.getElementById('btnMostrarRutas').addEventListener('click', function() {
+            showRoutes = !showRoutes;
+            this.classList.toggle('active', showRoutes);
+            displayRoutes(routeData);
+        });
+
+        document.getElementById('btnVerTodoMexico').addEventListener('click', function() {
+            map.setView([23.6345, -102.5528], 5);
+            selectedLayer.clearLayers();
+
+            // Cerrar el menú después de la acción
+            if (document.getElementById('slideMenu').classList.contains('open')) {
+                toggleMenu();
+            }
+        });
+
+        // Función auxiliar
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('loginMessage');
+            messageDiv.textContent = text;
+            messageDiv.className = `login-message ${type}`;
+            messageDiv.style.display = 'block';
+        }
+
+        // Inicializar aplicación
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
