@@ -1,0 +1,458 @@
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            margin: 0;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #000000;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .leaflet-div-icon {
+            background: transparent;
+            border: 1px solid transparent;
+        }
+        .leaflet-control-zoom {
+            border: none !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+        }
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        }
+        .login-box {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            border: 2px solid #611232;
+        }
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-logo img {
+            height: 70px;
+            margin-bottom: 1rem;
+            animation: float-imss 3s ease-in-out infinite;
+        }
+        @keyframes float-imss {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.05); }
+        }
+        .login-title {
+            color: #611232;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .login-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .login-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #611232;
+        }
+        .login-form input {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .login-form input:focus {
+            outline: none;
+            border-color: #AE8640;
+            box-shadow: 0 0 0 3px rgba(174, 134, 64, 0.2);
+        }
+        .login-btn {
+            background-color: #611232;
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 1rem;
+        }
+        .login-btn:hover {
+            background-color: #4a0e26;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .login-message {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .login-message.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+        .login-message.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+        .main-content {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+        header {
+            background-color: #611232;
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            height: 80px;
+            position: relative;
+        }
+        .logo-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .logo-imss {
+            height: 50px;
+            width: auto;
+        }
+        @keyframes pulse-imss {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.9; }
+        }
+        .header-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+        .user-info {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 0.85rem;
+            text-align: right;
+        }
+        .user-info strong {
+            display: block;
+            font-size: 0.9rem;
+        }
+        .logout-btn {
+            background: none;
+            border: 1px solid white;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover {
+            background-color: white;
+            color: #611232;
+        }
+        .main-container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            height: calc(100vh - 130px);
+            overflow: hidden;
+        }
+        .right-panel {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            background-color: #f8f9fa;
+        }
+        .map-container {
+            flex: 1;
+            position: relative;
+            height: 100%;
+            min-height: 0;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        /* Botón de menú hamburguesa - sin emoji */
+        .hamburger-menu-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #611232;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: 2px solid white;
+            transition: all 0.3s ease;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .hamburger-menu-btn:hover {
+            transform: scale(1.1);
+            background-color: #4a0e26;
+        }
+        .hamburger-menu-btn span {
+            transition: transform 0.3s ease;
+        }
+        .hamburger-menu-btn.active span {
+            transform: rotate(90deg);
+        }
+
+        /* Panel deslizable del menú */
+        .slide-menu {
+            position: absolute;
+            top: 80px;
+            right: -400px;
+            width: 350px;
+            max-height: calc(100vh - 150px);
+            background: white;
+            border-radius: 12px 0 0 12px;
+            box-shadow: -5px 5px 20px rgba(0,0,0,0.2);
+            z-index: 1500;
+            transition: right 0.3s ease-in-out;
+            overflow-y: auto;
+            border: 2px solid #611232;
+            border-right: none;
+        }
+        .slide-menu.open {
+            right: 0;
+        }
+
+        /* Panel de estadísticas dentro del menú */
+        .stats-panel-menu {
+            padding: 20px;
+            border-bottom: 2px solid #AE8640;
+        }
+        .stats-title-menu {
+            color: #611232;
+            font-size: 1.2em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #AE8640;
+            padding-bottom: 8px;
+        }
+        .stats-grid-menu {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .stat-card-menu {
+            background: linear-gradient(135deg, #AE8640, #8a6d32);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .stat-card-menu:hover {
+            transform: scale(1.05);
+        }
+        .stat-card-menu.hbc-stat {
+            background: linear-gradient(135deg, #235B4E, #1a453a);
+        }
+        .stat-card-menu.entidad-stat {
+            background: linear-gradient(135deg, #7A1737, #5a1129);
+        }
+        .stat-card-menu.cluster-stat {
+            background: linear-gradient(135deg, #611232, #4a0e26);
+        }
+        .stat-number-menu {
+            font-size: 2em;
+            font-weight: 900;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .stat-label-menu {
+            font-size: 0.8em;
+            font-weight: 700;
+            opacity: 0.95;
+        }
+
+        /* Controles del mapa dentro del menú */
+        .map-controls-panel-menu {
+            padding: 20px;
+        }
+        .map-controls-title-menu {
+            color: #611232;
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #AE8640;
+        }
+        .map-controls-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .control-btn-menu {
+            padding: 12px 15px;
+            border: 2px solid #7A1737;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .control-btn-menu i {
+            width: 20px;
+            font-size: 1.1rem;
+        }
+        .control-btn-menu:hover {
+            background-color: rgba(174, 134, 64, 0.1);
+            transform: translateX(-5px);
+        }
+        .control-btn-menu.active {
+            background-color: #AE8640;
+            color: white;
+            border-color: #AE8640;
+        }
+        .control-btn-menu.hbc.active {
+            background-color: #235B4E;
+            border-color: #235B4E;
+        }
+
+        /* Info de ruta y leyenda */
+        .info-ruta-map {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-size: 12px;
+            max-width: 300px;
+            display: none;
+            border: 1px solid #ddd;
+        }
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            font-size: 12px;
+            border: 1px solid #ddd;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 1px solid #666;
+        }
+        .legend-color.ancla {
+            background-color: #AE8640;
+        }
+        .legend-color.hbc {
+            background-color: #235B4E;
+        }
+        .legend-color.ruta {
+            background-color: #7A1737;
+            width: 15px;
+            height: 3px;
+            border-radius: 0;
+        }
+        footer {
+            background-color: #611232;
+            color: white;
+            text-align: center;
+            padding: 0.8rem;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            height: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.6rem;
+                height: 70px;
+            }
+            .logo-imss {
+                height: 40px;
+            }
+            .header-title {
+                font-size: 1rem;
+            }
+            .user-info {
+                right: 10px;
+                font-size: 0.75rem;
+            }
+            .slide-menu {
+                width: 280px;
+                top: 70px;
+            }
+        }
